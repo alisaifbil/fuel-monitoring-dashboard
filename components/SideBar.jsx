@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
+import useSidebarControls from "@/hooks/sidebar-control";
 
 const SideBar = ({ children }) => {
-  const [open, setOpen] = useState(true);
+  const { open , close, show } = useSidebarControls();
   const [active, setActive] = useState("");
   
 
@@ -15,14 +16,14 @@ const SideBar = ({ children }) => {
     <div className="flex">
       <div
         className={`${
-          open ? "w-72" : "w-20"
+          show ? "w-72" : "w-20"
         } p-5 pt-8 duration-300 h-screen bg-dark-purple relative`}
       >
         <ChevronLeftIcon
           className={`absolute cursor-pointer rounded-full -right-3 top-9 w-7 border-2 border-dark-purple fill-dark-purple bg-white ${
-            !open && "rotate-180"
+            !show && "rotate-180"
           }`}
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={show ? close : open}
         />
         <div className="flex gap-x-4 items-center">
           <img
@@ -31,7 +32,7 @@ const SideBar = ({ children }) => {
           />
           <h1
             className={`text-white origin-left font-medium text-xl duration-300 ${
-              !open && "scale-0"
+              !show && "scale-0"
             }`}
           >
             Description
@@ -43,12 +44,12 @@ const SideBar = ({ children }) => {
               <li
                 key={index}
                 className={`${
-                  open && active === menu.title && "bg-light-white"
+                  show && active === menu.title && "bg-light-white"
                 } text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md checked:bg-violet-700`}
                 onClick={() => setActive(menu.title)}
               >
                 <span
-                  className={`${!open && "hidden"} origin-left duration-200`}
+                  className={`${!show && "hidden"} origin-left duration-200`}
                 >
                   {menu.title}
                 </span>
