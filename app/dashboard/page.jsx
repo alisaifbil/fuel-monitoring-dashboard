@@ -1,8 +1,9 @@
 import React from 'react'
+import VehicleSummary from '@/components/VehicleSummary'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard Dashboard </div>
+    <VehicleSummary />
   )
 }
 

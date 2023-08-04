@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import useSidebarControls from "@/hooks/sidebar-control";
+import NavBar from "./NavBar";
 
 const SideBar = ({ children }) => {
-  const { open , close, show } = useSidebarControls();
+  const { open, close, show } = useSidebarControls();
   const [active, setActive] = useState("");
-  
 
   const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
 
@@ -17,7 +17,7 @@ const SideBar = ({ children }) => {
       <div
         className={`${
           show ? "w-72" : "w-20"
-        } p-5 pt-8 duration-300 h-screen bg-dark-purple relative`}
+        } p-5 pt-8 duration-300 h-screen bg-dark-purple relative z-20`}
       >
         <ChevronLeftIcon
           className={`absolute cursor-pointer rounded-full -right-3 top-9 w-7 border-2 border-dark-purple fill-dark-purple bg-white ${
@@ -58,7 +58,8 @@ const SideBar = ({ children }) => {
           ))}
         </ul>
       </div>
-      <div className="p-7 text-2xl font-semibold flex-1 h-screen">
+      <div className="z-10 text-2xl font-semibold flex-1 h-screen">
+      <NavBar />
         {children}
       </div>
     </div>
