@@ -59,7 +59,7 @@ const SideBar = ({ children }) => {
         </ul>
       </div>
       <div className="z-10 text-2xl font-semibold flex-1 h-screen">
-      <NavBar />
+        <NavBar />
         {children}
       </div>
     </div>
