@@ -11,10 +11,12 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "chart.js": "^4.3.3",
+    "faker": "^6.6.6",
     "flowbite": "^1.8.0",
     "flowbite-react": "^0.5.0",
     "next": "13.4.12",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1"
   },
