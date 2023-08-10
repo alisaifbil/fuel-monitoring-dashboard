@@ -60,7 +60,7 @@ const SideBar = ({ children }) => {
           </ul>
         </div>
       </div>
-      <div className="z-10 text-2xl font-semibold flex-1 h-screen">
+      <div className="z-10 text-2xl font-semibold flex-1">
         <NavBar />
         {children}
       </div>
