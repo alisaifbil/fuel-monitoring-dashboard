@@ -61,7 +61,7 @@ const SideBar = ({ children }) => {
         </div>
       </div>
       <div className="z-10 text-2xl font-semibold flex-1">
-        <NavBar />
+        <NavBar Menus={Menus} activeBtn={active} setActiveBtn={setActive} />
         {children}
       </div>
     </div>
