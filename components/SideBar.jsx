@@ -12,6 +12,10 @@ const SideBar = ({ children }) => {
 
   const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
 
+  const handleNavBarBtnClick = (title) => {
+        setActive(title);
+    };
+
   return (
     <div className="flex">
       <div className="hidden md:block">
@@ -47,7 +51,7 @@ const SideBar = ({ children }) => {
                   className={`${
                     show && active === menu.title && "bg-light-white"
                   } text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md checked:bg-violet-700`}
-                  onClick={() => setActive(menu.title)}
+                  onClick={() => handleNavBarBtnClick(menu.title)}
                 >
                   <span
                     className={`${!show && "hidden"} origin-left duration-200`}
