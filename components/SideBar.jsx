@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Link from "next/link";
 import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import useSidebarControls from "@/hooks/sidebar-control";
@@ -9,12 +10,23 @@ import NavBar from "./NavBar";
 const SideBar = ({ children }) => {
   const { open, close, show } = useSidebarControls();
   const [active, setActive] = useState("");
+  const [providers, setProviders] = useState(null);
+  const { data: session } = useSession();
 
   const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
 
-  const handleNavBarBtnClick = (title) => {
-        setActive(title);
+  useEffect(() => {
+    const setUpProviders = async () => {
+      const response = await getProviders();
+      setProviders(response);
     };
+
+    setUpProviders();
+  }, []);
+
+  const handleNavBarBtnClick = (title) => {
+    setActive(title);
+  };
 
   return (
     <div className="flex">
@@ -65,7 +77,15 @@ const SideBar = ({ children }) => {
         </div>
       </div>
       <div className="z-10 text-2xl font-semibold flex-1">
-        <NavBar Menus={Menus} activeBtn={active} setActiveBtn={setActive} />
+        <NavBar
+          Menus={Menus}
+          activeBtn={active}
+          setActiveBtn={setActive}
+          providers={providers}
+          session={session}
+          signIn={signIn} 
+          signOut={signOut}
+        />
         {children}
       </div>
     </div>

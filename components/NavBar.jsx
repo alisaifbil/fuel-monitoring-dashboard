@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import Link from "next/link";
 import Image from "next/image";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
-const NavBar = ({ Menus, activeBtn, setActiveBtn }) => {
-  const { data: session } = useSession();
-
-  const [providers, setProviders] = useState(null);
-
-  useEffect(() => {
-    const setUpProviders = async () => {
-      const response = await getProviders();
-      setProviders(response);
-    };
-
-    setUpProviders();
-  }, []);
+const NavBar = ({ Menus, activeBtn, setActiveBtn, providers, session, signIn, signOut }) => {
 
   const handleNavBarBtnClick = (title) => {
     setActiveBtn(title);
@@ -68,7 +55,7 @@ const NavBar = ({ Menus, activeBtn, setActiveBtn }) => {
                     type="button"
                     key={provider.name}
                     onClick={() => signIn(provider.id)}
-                    className="rounded-full border border-black bg-black py-0.5 px-2.5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center"
+                    className="rounded-full border border-black bg-black py-0.5 px-2.5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center md:mt-2"
                   >
                     Sign In
                   </button>
