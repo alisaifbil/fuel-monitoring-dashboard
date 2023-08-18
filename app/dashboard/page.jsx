@@ -1,9 +1,28 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import VehicleSummary from "@/components/VehicleSummary";
 import RecentRefills from "@/components/RecentRefills";
 import DetailsOverChart from "@/components/DetailsOverChart";
+import { useSession } from "next-auth/react";
 
 const Dashboard = () => {
+  const [refillDetails, setRefillDetails] = useState([]);
+
+  const { data : session } = useSession();
+  
+  useEffect(() => {
+    const fetchRefillDetails = async () => {
+      const response = await fetch(`/api/vehiclerefilldetails`, { next: { revalidate: 3600 } });
+      const data = await response.json();
+      
+      setRefillDetails(data);
+    };
+
+    if (session?.user.id) fetchRefillDetails();
+    
+  }, []);
+
   return (
     <>
       <div className="w-full flex flex-col pt-4 md:flex-row pl-[2.5%]">

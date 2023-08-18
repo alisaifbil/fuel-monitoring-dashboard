@@ -1,14 +1,14 @@
-import { connectToDB } from "@utils/database";
-import Prompt from "@models/prompt";
+import { connectToDB } from "@/utils/database";
+import VehicleFuelDetails from "@/models/vehiclefueldetails";
 
 export const GET = async (request) => {
   try {
     await connectToDB();
 
-    const prompts = await Prompt.find({}).populate("creator");
-
-    return new Response(JSON.stringify(prompts), { status: 200 });
+    const refillDetails = await VehicleFuelDetails.find({}).populate("creator");
+    console.log(refillDetails);
+    return new Response(JSON.stringify(refillDetails), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch any prompts", { status: 500 });
+    return new Response("Failed to fetch any Refill Details", { status: 500 });
   }
 };
