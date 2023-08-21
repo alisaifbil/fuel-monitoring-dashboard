@@ -6,7 +6,7 @@ export const GET = async (request) => {
     await connectToDB();
 
     const refillDetails = await VehicleFuelDetails.find({}).populate("creator");
-    console.log(refillDetails);
+    
     return new Response(JSON.stringify(refillDetails), { status: 200 });
   } catch (error) {
     return new Response("Failed to fetch any Refill Details", { status: 500 });

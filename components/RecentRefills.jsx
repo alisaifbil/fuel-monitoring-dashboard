@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const RecentRefills = () => {
+const RecentRefills = (data) => {
+
+    const [displayData , setDisplayData ] = useState([]);
+
+    useEffect(() => {
+        const sortedData = data?.data?.sort(
+            (recent, old) => new Date(old.date) - new Date(recent.date)
+          );
+        const displayDataArray = sortedData.slice(0, 5);
+
+        setDisplayData(displayDataArray);
+    }, [])
+    
+
+
   return (
     <div className="flex relative overflow-x-auto rounded-lg">
-      <table className="grow text-xs text-center text-gray-500 border ">
+      {displayData.length > 0 ? (<table className="grow text-xs text-center text-gray-500 border ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
             <th scope="col" className="px-[2.5%] py-[1.875%]">
@@ -24,19 +38,21 @@ const RecentRefills = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="bg-white border-b">
+          {displayData.map((record , index) => (
+            <tr className="bg-white border-b" key={index}>
             <th
               scope="row"
               className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap"
             >
-              3/August
+              {record.date.split('T')[0]}
             </th>
-            <td className="px-[2.5%] py-[1.875%]">Peugeot</td>
-            <td className="px-[2.5%] py-[1.875%]">Rs.11227</td>
-            <td className="px-[2.5%] py-[1.875%]">38.32</td>
-            <td className="px-[2.5%] py-[1.875%]">8001</td>
+            <td className="px-[2.5%] py-[1.875%]">{record.vehicleName}</td>
+            <td className="px-[2.5%] py-[1.875%]">Rs. {record.price}</td>
+            <td className="px-[2.5%] py-[1.875%]">{record.volume}</td>
+            <td className="px-[2.5%] py-[1.875%]">{record.currentMileage}</td>
           </tr>
-          <tr className="bg-white border-b">
+          ))}
+          {/* <tr className="bg-white border-b">
             <th
               scope="row"
               className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap "
@@ -83,9 +99,9 @@ const RecentRefills = () => {
             <td className="px-[2.5%] py-[1.875%]">Rs. 7351</td>
             <td className="px-[2.5%] py-[1.875%]">28.97</td>
             <td className="px-[2.5%] py-[1.875%]">40254</td>
-          </tr>
+          </tr> */}
         </tbody>
-      </table>
+      </table>): null}
     </div>
   );
 };
