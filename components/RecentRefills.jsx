@@ -52,54 +52,6 @@ const RecentRefills = (data) => {
             <td className="px-[2.5%] py-[1.875%]">{record.currentMileage}</td>
           </tr>
           ))}
-          {/* <tr className="bg-white border-b">
-            <th
-              scope="row"
-              className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap "
-            >
-              2/August
-            </th>
-            <td className="px-[2.5%] py-[1.875%]">Honda 150</td>
-            <td className="px-[2.5%] py-[1.875%]">Rs. 3010</td>
-            <td className="px-[2.5%] py-[1.875%]">11</td>
-            <td className="px-[2.5%] py-[1.875%]">2632</td>
-          </tr>
-          <tr className="bg-white  border-b">
-            <th
-              scope="row"
-              className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap "
-            >
-              2/August
-            </th>
-            <td className="px-[2.5%] py-[1.875%]">Peugeot</td>
-            <td className="px-[2.5%] py-[1.875%]">Rs. 1000</td>
-            <td className="px-[2.5%] py-[1.875%]">3.65</td>
-            <td className="px-[2.5%] py-[1.875%]">7982</td>
-          </tr>
-          <tr className="bg-white border-b ">
-            <th
-              scope="row"
-              className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap "
-            >
-              31/July
-            </th>
-            <td className="px-[2.5%] py-[1.875%]">Wagon R</td>
-            <td className="px-[2.5%] py-[1.875%]">Rs. 8770</td>
-            <td className="px-[2.5%] py-[1.875%]">34.56</td>
-            <td className="px-[2.5%] py-[1.875%]">40743</td>
-          </tr>
-          <tr className="bg-white border-b ">
-            <th
-              scope="row"
-              className="px-[2.5%] py-[1.875%] font-medium text-gray-900 whitespace-nowrap "
-            >
-              21/July
-            </th>
-            <td className="px-[2.5%] py-[1.875%]">Wagon R</td>
-            <td className="px-[2.5%] py-[1.875%]">Rs. 7351</td>
-            <td className="px-[2.5%] py-[1.875%]">28.97</td>
-            <td className="px-[2.5%] py-[1.875%]">40254</td>
-          </tr> */}
         </tbody>
       </table>): null}
     </div>

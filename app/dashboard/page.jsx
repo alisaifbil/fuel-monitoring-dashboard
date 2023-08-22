@@ -78,24 +78,34 @@ const Dashboard = () => {
   return (
     <>
       <div className="w-full flex flex-col pt-4 md:flex-row pl-[2.5%]">
-        <div className="w-auto flex flex-col gap-y-2 md:grid md:grid-cols-2 md:gap-y-4 md:gap-x-2 md:w-[65%]">
-          {monthlyRefillDetails?.currentMonth?.map((entry, index) => (
-            <VehicleSummary
-              key={index}
-              carName={entry.vehicleName}
-              totalPrice={entry.totalPrice}
-              totalLitres={entry.totalVolume}
-              previousMonthDetails={monthlyRefillDetails?.previousMonth?.find(
-                (rec) => rec.vehicleName === entry.vehicleName
-              )}
-            />
-          ))}
-        </div>
-        <div className="w-[92.5%] pt-2 pb-4 md:w-[40%] md:pt-0 md:pl-1 md:pr-1">
-          {refillDetails.length > 0 ? (
-            <RecentRefills data={refillDetails} />
-          ) : null}
-        </div>
+        {monthlyRefillDetails?.currentMonth?.length > 0 ? (
+          <div className="flex flex-col md:w-[80%]">
+            <h4 className="text-md p-4">Refueling Summary</h4>
+            <div className="flex flex-col gap-y-2 md:grid md:grid-cols-2 md:gap-y-4 md:gap-x-1">
+              {monthlyRefillDetails?.currentMonth?.map((entry, index) => (
+                <VehicleSummary
+                  key={index}
+                  carName={entry.vehicleName}
+                  totalPrice={entry.totalPrice}
+                  totalLitres={entry.totalVolume}
+                  previousMonthDetails={monthlyRefillDetails?.previousMonth?.find(
+                    (rec) => rec.vehicleName === entry.vehicleName
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {refillDetails.length > 0 ? (
+          <div className="flex flex-col md:w-[50%] w-[95%]">
+            <h4 className="text-md p-4">Last Five Refills</h4>
+            <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
+              {refillDetails.length > 0 ? (
+                <RecentRefills data={refillDetails} />
+              ) : null}
+            </div>
+          </div>
+        ) : null}
       </div>
       <div className="hidden md:block md:grow md:w-full">
         <DetailsOverChart />
