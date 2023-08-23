@@ -12,7 +12,12 @@ const Dashboard = () => {
   const [yearlyRefillDetails, setYearlyRefillDetails] = useState([]);
 
   const { data: session } = useSession();
-
+  const vehicleList = {
+    YY: { name: "YBR-G" },
+    PE: { name: "Peugueot" },
+    WR: { name: "Wagon R" },
+    HC: { name: "Honda 150" },
+  };
   useEffect(() => {
     const fetchRefillDetails = async () => {
       const response = await fetch(`/api/vehiclerefilldetails`, {
@@ -24,9 +29,9 @@ const Dashboard = () => {
       setMonthlyDetails(data);
     };
 
-    if (session?.user.id) {
+    // if (session?.user.id) {
       fetchRefillDetails();
-    }
+    // }
   }, []);
 
   const setMonthlyDetails = (data) => {
@@ -91,6 +96,7 @@ const Dashboard = () => {
                   previousMonthDetails={monthlyRefillDetails?.previousMonth?.find(
                     (rec) => rec.vehicleName === entry.vehicleName
                   )}
+                  vehicleList = {vehicleList}
                 />
               ))}
             </div>
@@ -101,15 +107,15 @@ const Dashboard = () => {
             <h4 className="text-md p-4">Last Five Refills</h4>
             <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
               {refillDetails.length > 0 ? (
-                <RecentRefills data={refillDetails} />
+                <RecentRefills data={refillDetails} vehicleList={vehicleList} />
               ) : null}
             </div>
           </div>
         ) : null}
       </div>
-      <div className="hidden md:block md:grow md:w-full">
+      {/* <div className="hidden md:block md:grow md:w-full">
         <DetailsOverChart />
-      </div>
+      </div> */}
     </>
   );
 };

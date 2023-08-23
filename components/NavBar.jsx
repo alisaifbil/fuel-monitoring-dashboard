@@ -2,8 +2,18 @@ import React from "react";
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
-const NavBar = ({ Menus, activeBtn, setActiveBtn, providers, session, signIn, signOut }) => {
+const NavBar = ({
+  Menus,
+  activeBtn,
+  setActiveBtn,
+  providers,
+  session,
+  signIn,
+  signOut,
+}) => {
+  const { status } = useSession();
 
   const handleNavBarBtnClick = (title) => {
     setActiveBtn(title);
@@ -15,13 +25,26 @@ const NavBar = ({ Menus, activeBtn, setActiveBtn, providers, session, signIn, si
         <div className="block md:hidden md:w-auto">
           <ul className="flex p-0 flex-row space-x-4 mt-0 border-0 md:hidden">
             {Menus.map((menu, index) => (
-              <Link key={index} href={`/${menu.title.toLowerCase()}`}>
+              <Link
+                key={index}
+                href={`/${menu.title.toLowerCase()}`}
+                className={`${
+                  (status === "authenticated" && menu.title === "Entry") ||
+                  menu.title !== "Entry"
+                    ? "block"
+                    : "hidden"
+                }`}
+              >
                 <li
                   key={index}
                   onClick={() => {
                     handleNavBarBtnClick(menu.title);
                   }}
-                  className={`text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md ${activeBtn === menu.title ? "text-black font-bold" : 'text-gray-300'}`}
+                  className={`text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md ${
+                    activeBtn === menu.title
+                      ? "text-black font-bold"
+                      : "text-gray-300"
+                  }`}
                 >
                   <span className={`origin-left duration-200`}>
                     {menu.title}
@@ -34,7 +57,11 @@ const NavBar = ({ Menus, activeBtn, setActiveBtn, providers, session, signIn, si
         <div className="flex align-middle">
           {session?.user ? (
             <div className="flex gap-3 md:gap-5">
-              <button type="button" onClick={signOut} className="rounded-full border border-black bg-transparent py-0.5 px-2.5 text-black transition-all hover:bg-black hover:text-white text-center text-xs font-inter flex items-center justify-center">
+              <button
+                type="button"
+                onClick={signOut}
+                className="rounded-full border border-black bg-transparent py-0.5 px-2.5 text-black transition-all hover:bg-black hover:text-white text-center text-xs font-inter flex items-center justify-center"
+              >
                 Sign Out
               </button>
               <Link href="#">

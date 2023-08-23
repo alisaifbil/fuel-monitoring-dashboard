@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-const RecentRefills = (data) => {
+const RecentRefills = ({data , vehicleList}) => {
 
     const [displayData , setDisplayData ] = useState([]);
+    const vehcileNames = vehicleList;
 
     useEffect(() => {
-        const sortedData = data?.data?.sort(
+        
+        const sortedData = data?.sort(
             (recent, old) => new Date(old.date) - new Date(recent.date)
           );
         const displayDataArray = sortedData.slice(0, 5);
@@ -46,7 +48,7 @@ const RecentRefills = (data) => {
             >
               {record.date.split('T')[0]}
             </th>
-            <td className="px-[2.5%] py-[1.875%]">{record.vehicleName}</td>
+            <td className="px-[2.5%] py-[1.875%]">{vehcileNames[record.vehicleName].name}</td>
             <td className="px-[2.5%] py-[1.875%]">Rs. {record.price}</td>
             <td className="px-[2.5%] py-[1.875%]">{record.volume}</td>
             <td className="px-[2.5%] py-[1.875%]">{record.currentMileage}</td>

@@ -5,6 +5,7 @@ const VehicleSummary = ({
   totalPrice,
   totalLitres,
   previousMonthDetails,
+  vehicleList
 }) => {
   const momPct =
     Math.round(
@@ -12,10 +13,12 @@ const VehicleSummary = ({
         Number.EPSILON) *
         100
     ) / 100;
+
+    const vehcileNames = vehicleList;
   return (
     <div className="block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
       <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-        {carName}
+        {vehcileNames[carName].name}
       </h3>
       <p className="font-normal text-sm text-gray-700">
         {" "}

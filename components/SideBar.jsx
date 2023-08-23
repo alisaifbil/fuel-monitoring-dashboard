@@ -11,7 +11,7 @@ const SideBar = ({ children }) => {
   const { open, close, show } = useSidebarControls();
   const [active, setActive] = useState("");
   const [providers, setProviders] = useState(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
 
@@ -57,7 +57,16 @@ const SideBar = ({ children }) => {
           </div>
           <ul className="pt-6">
             {Menus.map((menu, index) => (
-              <Link key={index} href={`/${menu.title.toLowerCase()}`}>
+              <Link
+                key={index}
+                href={`/${menu.title.toLowerCase()}`}
+                className={`${
+                  (status === "authenticated" && menu.title === "Entry") ||
+                  menu.title !== "Entry"
+                    ? "block"
+                    : "hidden"
+                }`}
+              >
                 <li
                   key={index}
                   className={`${
@@ -83,7 +92,7 @@ const SideBar = ({ children }) => {
           setActiveBtn={setActive}
           providers={providers}
           session={session}
-          signIn={signIn} 
+          signIn={signIn}
           signOut={signOut}
         />
         {children}
