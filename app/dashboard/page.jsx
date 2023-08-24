@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [refillDetails, setRefillDetails] = useState([]);
   const [monthlyRefillDetails, setMonthlyRefillDetails] = useState({});
   const [yearlyRefillDetails, setYearlyRefillDetails] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
 
   const { data: session } = useSession();
   const vehicleList = {
@@ -30,7 +31,7 @@ const Dashboard = () => {
     };
 
     // if (session?.user.id) {
-      fetchRefillDetails();
+    fetchRefillDetails();
     // }
   }, []);
 
@@ -80,12 +81,43 @@ const Dashboard = () => {
     setMonthlyRefillDetails(monthlyArray);
   };
 
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <>
       <div className="w-full flex flex-col pt-4 md:flex-row pl-[2.5%]">
         {monthlyRefillDetails?.currentMonth?.length > 0 ? (
           <div className="flex flex-col md:w-[80%]">
             <h4 className="text-md p-4">Refueling Summary</h4>
+            <div class="flex h-fit w-fit items-center justify-center bg-cyan-600 rounded-md mb-1 md:bg-slate-100/70">
+              <div class="max-w-2xl px-[0.5rem] py-2">
+                <div class="flex flex-wrap gap-x-1">
+                  <label class="cursor-pointer">
+                    <input type="radio" class="peer sr-only" name="pricing" />
+                    <div class="w-[9.4rem] md:w-[20.375rem] max-w-xl rounded-md bg-white p-2 text-gray-300 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-black peer-checked:ring-offset-2">
+                      <div class="items-center justify-between">
+                        <p class="text-center text-sm font-semibold uppercase ">
+                          monthly
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" class="peer sr-only" name="pricing" />
+                    <div class="w-[9.4rem] md:w-[20.375rem] max-w-xl rounded-md bg-white p-2 text-gray-300 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-black peer-checked:ring-offset-2">
+                      <div class="items-center justify-between">
+                        <p class="text-center text-sm font-semibold uppercase ">
+                          yearly
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div className="flex flex-col gap-y-2 md:grid md:grid-cols-2 md:gap-y-4 md:gap-x-1">
               {monthlyRefillDetails?.currentMonth?.map((entry, index) => (
                 <VehicleSummary
@@ -96,7 +128,7 @@ const Dashboard = () => {
                   previousMonthDetails={monthlyRefillDetails?.previousMonth?.find(
                     (rec) => rec.vehicleName === entry.vehicleName
                   )}
-                  vehicleList = {vehicleList}
+                  vehicleList={vehicleList}
                 />
               ))}
             </div>
