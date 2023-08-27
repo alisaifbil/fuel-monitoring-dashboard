@@ -4,12 +4,12 @@ const VehicleSummary = ({
   carName,
   totalPrice,
   totalLitres,
-  previousMonthDetails,
+  previousMOYDetails,
   vehicleList
 }) => {
   const momPct =
     Math.round(
-      ((totalLitres / previousMonthDetails.totalVolume) * 100 +
+      ((totalLitres / previousMOYDetails?.totalVolume) * 100 +
         Number.EPSILON) *
         100
     ) / 100;
@@ -28,7 +28,8 @@ const VehicleSummary = ({
         {" "}
         {Math.round((totalLitres + Number.EPSILON) * 100) / 100} Litres
       </p>
-      <div className="w-[100%] bg-gray-200 rounded-full mb-4 mt-4">
+      {!isNaN(momPct) && momPct !== Infinity ? 
+      (<div className="w-[100%] bg-gray-200 rounded-full mb-4 mt-4">
         {/* String interpolation can be used with tailwind but there are certain limitations so it is better 
         to use style instead of giving styling inside className */}
         <div
@@ -43,7 +44,7 @@ const VehicleSummary = ({
         >
           {momPct}% of last month
         </div>
-      </div>
+      </div>) : null}
     </div>
   );
 };

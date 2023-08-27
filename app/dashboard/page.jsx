@@ -5,12 +5,14 @@ import VehicleSummary from "@/components/VehicleSummary";
 import RecentRefills from "@/components/RecentRefills";
 import DetailsOverChart from "@/components/DetailsOverChart";
 import { useSession } from "next-auth/react";
+import SummaryFilters from "@/components/SummaryFilters";
 
 const Dashboard = () => {
   const [refillDetails, setRefillDetails] = useState([]);
   const [monthlyRefillDetails, setMonthlyRefillDetails] = useState({});
   const [yearlyRefillDetails, setYearlyRefillDetails] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [filter, setFilter] = useState("monthly");
+  const [summaryData, setSummaryData] = useState({ current: [], previous: [] });
 
   const { data: session } = useSession();
   const vehicleList = {
@@ -19,6 +21,8 @@ const Dashboard = () => {
     WR: { name: "Wagon R" },
     HC: { name: "Honda 150" },
   };
+  const filters = ["monthly", "yearly"];
+
   useEffect(() => {
     const fetchRefillDetails = async () => {
       const response = await fetch(`/api/vehiclerefilldetails`, {
@@ -27,7 +31,7 @@ const Dashboard = () => {
       const data = await response.json();
 
       setRefillDetails(data);
-      setMonthlyDetails(data);
+      filteredData(data, filter);
     };
 
     // if (session?.user.id) {
@@ -35,105 +39,78 @@ const Dashboard = () => {
     // }
   }, []);
 
-  const setMonthlyDetails = (data) => {
-    const monthlyArray = { currentMonth: [], previousMonth: [] };
+  const filteredData = (data, filter) => {
+    const summaryArray = { current: [], previous: [] };
     const currentDate = new Date();
     data.map((entry) => {
-      const entryMonth = new Date(entry.date).getMonth();
+      //   const entryMonth = new Date(entry.date).getMonth();
+      const entryMOY =
+        filter === "monthly"
+          ? new Date(entry.date).getMonth() === currentDate.getMonth()
+          : new Date(entry.date).getFullYear() === currentDate.getFullYear();
+      const entryMOYPrev =
+        filter === "monthly"
+          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1
+          : new Date(entry.date).getFullYear() ===
+            currentDate.getFullYear() - 1;
 
-      if (entryMonth === currentDate.getMonth()) {
-        const indexOfEntry = monthlyArray.currentMonth.findIndex(
+      if (entryMOY) {
+        const indexOfEntry = summaryArray.current.findIndex(
           (e) => e.vehicleName === entry.vehicleName
         );
 
         if (indexOfEntry !== -1) {
-          monthlyArray["currentMonth"][indexOfEntry].totalPrice += entry.price;
-          monthlyArray["currentMonth"][indexOfEntry].totalVolume +=
-            entry.volume;
+          summaryArray["current"][indexOfEntry].totalPrice += entry.price;
+          summaryArray["current"][indexOfEntry].totalVolume += entry.volume;
         } else {
           let obj = {
             vehicleName: entry.vehicleName,
             totalPrice: entry.price,
             totalVolume: entry.volume,
           };
-          monthlyArray.currentMonth.push(obj);
+          summaryArray.current.push(obj);
         }
-      } else if (entryMonth === currentDate.getMonth() - 1) {
-        const indexOfEntry = monthlyArray.previousMonth.findIndex(
+      } else if (entryMOYPrev) {
+        const indexOfEntry = summaryArray.previous.findIndex(
           (e) => e.vehicleName === entry.vehicleName
         );
 
         if (indexOfEntry !== -1) {
-          monthlyArray["previousMonth"][indexOfEntry].totalPrice += entry.price;
-          monthlyArray["previousMonth"][indexOfEntry].totalVolume +=
-            entry.volume;
+          summaryArray["previous"][indexOfEntry].totalPrice += entry.price;
+          summaryArray["previous"][indexOfEntry].totalVolume += entry.volume;
         } else {
           let obj = {
             vehicleName: entry.vehicleName,
             totalPrice: entry.price,
             totalVolume: entry.volume,
           };
-          monthlyArray.previousMonth.push(obj);
+          summaryArray.previous.push(obj);
         }
       }
     });
 
-    setMonthlyRefillDetails(monthlyArray);
+    setSummaryData(summaryArray);
   };
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+  const setFilteredData = (filterCaught) => {
+    console.log(filterCaught);
+    setFilter(filterCaught);
+    filteredData(refillDetails, filterCaught);
   };
 
   return (
     <>
       <div className="w-full flex flex-col pt-4 md:flex-row pl-[2.5%]">
-        {monthlyRefillDetails?.currentMonth?.length > 0 ? (
-          <div className="flex flex-col md:w-[80%]">
-            <h4 className="text-md p-4">Refueling Summary</h4>
-            <div class="flex h-fit w-fit items-center justify-center bg-cyan-600 rounded-md mb-1 md:bg-slate-100/70">
-              <div class="max-w-2xl px-[0.5rem] py-2">
-                <div class="flex flex-wrap gap-x-1">
-                  <label class="cursor-pointer">
-                    <input type="radio" class="peer sr-only" name="pricing" />
-                    <div class="w-[9.4rem] md:w-[20.375rem] max-w-xl rounded-md bg-white p-2 text-gray-300 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-black peer-checked:ring-offset-2">
-                      <div class="items-center justify-between">
-                        <p class="text-center text-sm font-semibold uppercase ">
-                          monthly
-                        </p>
-                      </div>
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input type="radio" class="peer sr-only" name="pricing" />
-                    <div class="w-[9.4rem] md:w-[20.375rem] max-w-xl rounded-md bg-white p-2 text-gray-300 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-black peer-checked:ring-offset-2">
-                      <div class="items-center justify-between">
-                        <p class="text-center text-sm font-semibold uppercase ">
-                          yearly
-                        </p>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-y-2 md:grid md:grid-cols-2 md:gap-y-4 md:gap-x-1">
-              {monthlyRefillDetails?.currentMonth?.map((entry, index) => (
-                <VehicleSummary
-                  key={index}
-                  carName={entry.vehicleName}
-                  totalPrice={entry.totalPrice}
-                  totalLitres={entry.totalVolume}
-                  previousMonthDetails={monthlyRefillDetails?.previousMonth?.find(
-                    (rec) => rec.vehicleName === entry.vehicleName
-                  )}
-                  vehicleList={vehicleList}
-                />
-              ))}
-            </div>
-          </div>
-        ) : null}
+        <div className="flex flex-col md:w-[80%]">
+          <h4 className="text-md p-4">Refueling Summary</h4>
+          <SummaryFilters
+            filters={filters}
+            updateFilter={(value) => setFilteredData(value)}
+            data={summaryData}
+            vehicleList={vehicleList}
+            activeFilter={filter}
+          />
+        </div>
         {refillDetails.length > 0 ? (
           <div className="flex flex-col md:w-[50%] w-[95%]">
             <h4 className="text-md p-4">Last Five Refills</h4>
