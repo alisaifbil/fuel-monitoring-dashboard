@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import useSidebarControls from "@/hooks/sidebar-control";
 import NavBar from "./NavBar";
@@ -12,6 +13,7 @@ const SideBar = ({ children }) => {
   const [active, setActive] = useState("");
   const [providers, setProviders] = useState(null);
   const { data: session, status } = useSession();
+  const pathName = usePathname();
 
   const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
 
@@ -23,6 +25,13 @@ const SideBar = ({ children }) => {
 
     setUpProviders();
   }, []);
+
+  useEffect(() => {
+    const currentPathName =
+      pathName.split("/")[1].charAt(0).toUpperCase() +
+      pathName.split("/")[1].slice(1);
+    setActive(currentPathName);
+  }, [pathName]);
 
   const handleNavBarBtnClick = (title) => {
     setActive(title);

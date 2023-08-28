@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const RecentRefills = ({data , vehicleList}) => {
+const RecentRefills = ({data , vehicleList, noOfRecords}) => {
 
     const [displayData , setDisplayData ] = useState([]);
     const vehcileNames = vehicleList;
@@ -10,7 +10,7 @@ const RecentRefills = ({data , vehicleList}) => {
         const sortedData = data?.sort(
             (recent, old) => new Date(old.date) - new Date(recent.date)
           );
-        const displayDataArray = sortedData.slice(0, 5);
+        const displayDataArray = noOfRecords? sortedData.slice(0, noOfRecords): sortedData;
 
         setDisplayData(displayDataArray);
     }, [])

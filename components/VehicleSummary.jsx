@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const VehicleSummary = ({
   carName,
@@ -7,6 +8,8 @@ const VehicleSummary = ({
   previousMOYDetails,
   vehicleList
 }) => {
+  const router = useRouter();
+
   const momPct =
     Math.round(
       ((totalLitres / previousMOYDetails?.totalVolume) * 100 +
@@ -15,8 +18,12 @@ const VehicleSummary = ({
     ) / 100;
 
     const vehcileNames = vehicleList;
+
+    const handleVehicleDetailsClick = () => {
+      router.push(`/vehiclesummary?name=${carName}`);
+    }
   return (
-    <div className="block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+    <div className="block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100" onClick={handleVehicleDetailsClick}>
       <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
         {vehcileNames[carName].name}
       </h3>

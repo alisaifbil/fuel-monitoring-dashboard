@@ -9,12 +9,11 @@ import SummaryFilters from "@/components/SummaryFilters";
 
 const Dashboard = () => {
   const [refillDetails, setRefillDetails] = useState([]);
-  const [monthlyRefillDetails, setMonthlyRefillDetails] = useState({});
-  const [yearlyRefillDetails, setYearlyRefillDetails] = useState([]);
   const [filter, setFilter] = useState("monthly");
   const [summaryData, setSummaryData] = useState({ current: [], previous: [] });
 
   const { data: session } = useSession();
+
   const vehicleList = {
     YY: { name: "YBR-G" },
     PE: { name: "Peugueot" },
@@ -43,14 +42,14 @@ const Dashboard = () => {
     const summaryArray = { current: [], previous: [] };
     const currentDate = new Date();
     data.map((entry) => {
-      //   const entryMonth = new Date(entry.date).getMonth();
+      // check for entryMOY and entryMOYPrev values for December and Jan values, should work fine for these months as well
       const entryMOY =
         filter === "monthly"
-          ? new Date(entry.date).getMonth() === currentDate.getMonth()
+          ? new Date(entry.date).getMonth() === currentDate.getMonth() && new Date(entry.date).getFullYear() === currentDate.getFullYear()
           : new Date(entry.date).getFullYear() === currentDate.getFullYear();
       const entryMOYPrev =
         filter === "monthly"
-          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1
+          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1 && new Date(entry.date).getFullYear() === currentDate.getFullYear()
           : new Date(entry.date).getFullYear() ===
             currentDate.getFullYear() - 1;
 
@@ -115,9 +114,11 @@ const Dashboard = () => {
           <div className="flex flex-col md:w-[50%] w-[95%]">
             <h4 className="text-md p-4">Last Five Refills</h4>
             <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
-              {refillDetails.length > 0 ? (
-                <RecentRefills data={refillDetails} vehicleList={vehicleList} />
-              ) : null}
+              <RecentRefills
+                data={refillDetails}
+                vehicleList={vehicleList}
+                noOfRecords={5}
+              />
             </div>
           </div>
         ) : null}
