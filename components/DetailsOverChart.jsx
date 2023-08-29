@@ -2,53 +2,32 @@
 import React from 'react';
 import {
   Chart as ChartJS,
-  CategoryScale,
   LinearScale,
+  CategoryScale,
   BarElement,
-  Title,
-  Tooltip,
+  PointElement,
+  LineElement,
   Legend,
+  Tooltip,
+  LineController,
+  BarController,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-// import faker from 'faker';
+import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
-  CategoryScale,
   LinearScale,
+  CategoryScale,
   BarElement,
-  Title,
+  PointElement,
+  LineElement,
+  Legend,
   Tooltip,
-  Legend
+  LineController,
+  BarController
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart',
-    },
-  },
-};
-
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => Math.random() * (1000 - 0) + 0),
-      backgroundColor: 'rgba(1, 0, 255, 0.5)',
-    }
-  ],
-};
-
-const DetailsOverChart = () => {
-  return <Bar options={options} data={data} />;
+const DetailsOverChart = ({options , data}) => {
+  return <Chart options={options} data={data} />;
 }
 
 export default DetailsOverChart;
