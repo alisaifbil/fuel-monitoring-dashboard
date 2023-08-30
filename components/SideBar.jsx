@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import useSidebarControls from "@/hooks/sidebar-control";
 import NavBar from "./NavBar";
+
 
 const SideBar = ({ children }) => {
   const { open, close, show } = useSidebarControls();
@@ -52,20 +54,20 @@ const SideBar = ({ children }) => {
             onClick={show ? close : open}
           />
           <div className="flex gap-x-4 items-center">
-            <img
+            {/* <img
               src="/next.svg"
               className={`cursor-pointer duration-500 w-16 h-16 `}
-            />
+            /> */}
             <h1
-              className={`text-white origin-left font-medium text-xl duration-300 ${
+              className={`text-gray-200 origin-left font-medium text-xl duration-300 text-center ${
                 !show && "scale-0"
               }`}
             >
-              Description
+              Vehicle Fuel Management Portal
             </h1>
           </div>
           <ul className="pt-6">
-            {Menus.map((menu, index) => (
+            {Menus?.map((menu, index) => (
               <Link
                 key={index}
                 href={`/${menu.title.toLowerCase()}`}
@@ -83,6 +85,12 @@ const SideBar = ({ children }) => {
                   } text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md checked:bg-violet-700`}
                   onClick={() => handleNavBarBtnClick(menu.title)}
                 >
+                  <Image 
+                  src={`/assets/${menu.title}.svg`}
+                  width={37}
+                  height={37}
+                  className="fill-white"
+                  />
                   <span
                     className={`${!show && "hidden"} origin-left duration-200`}
                   >

@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import VehicleSummary from "@/components/VehicleSummary";
 import RecentRefills from "@/components/RecentRefills";
 import DetailsOverChart from "@/components/DetailsOverChart";
 
@@ -91,8 +90,11 @@ const SummaryForVehicle = ({ params }) => {
           position: "left",
           title: {
             display: true,
-            text: 'Litres'
-          }
+            text: "Litres",
+          },
+          grid: {
+            display: false,
+          },
         },
         expense: {
           beginAtZero: true,
@@ -100,8 +102,8 @@ const SummaryForVehicle = ({ params }) => {
           position: "right",
           title: {
             display: true,
-            text: 'Ruppees'
-          }
+            text: "Ruppees",
+          },
         },
       },
     };
@@ -121,9 +123,10 @@ const SummaryForVehicle = ({ params }) => {
 
     vehicleData.map((entry) => {
       const entryDate = new Date(entry.date);
-      if (entryDate.getFullYear() === currentDate.getFullYear())
+      if (entryDate.getFullYear() === currentDate.getFullYear()) {
         expenseData[entryDate.getMonth()] += entry.price;
-      volumeData[entryDate.getMonth()] += entry.volume;
+        volumeData[entryDate.getMonth()] += entry.volume;
+      }
     });
 
     const data = {
@@ -137,7 +140,6 @@ const SummaryForVehicle = ({ params }) => {
           fill: true,
           data: volumeData,
           yAxisID: "volume",
-          
         },
         {
           type: "bar",
@@ -149,8 +151,8 @@ const SummaryForVehicle = ({ params }) => {
           yAxisID: "expense",
           title: {
             display: true,
-            text: 'Ruppees'
-          }
+            text: "Ruppees",
+          },
         },
       ],
     };
@@ -269,12 +271,11 @@ const SummaryForVehicle = ({ params }) => {
       </div>
       {refillDetails.length > 0 ? (
         <div className="flex flex-col w-[95%] md:w-full md:justify-evenly">
-          <h4 className="text-md p-4 text-center">{vehicleList[carName].name}'s Refills</h4>
+          <h4 className="text-md p-4 text-center">
+            {vehicleList[carName].name}'s Refills
+          </h4>
           <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
-            <RecentRefills
-              data={refillDetails}
-              vehicleList={vehicleList}
-            />
+            <RecentRefills data={refillDetails} vehicleList={vehicleList} />
           </div>
         </div>
       ) : null}
