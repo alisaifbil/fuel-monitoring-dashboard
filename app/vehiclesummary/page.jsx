@@ -31,7 +31,6 @@ const SummaryForVehicle = ({ params }) => {
     const fetchVehicleDetails = async () => {
       const response = await fetch(`/api/vehiclerefilldetails/${carName}`);
       const data = await response.json();
-      console.log(data);
       setRefillDetails(data);
       setOverallDetails(data);
       setBarChartValues(data);
@@ -275,7 +274,11 @@ const SummaryForVehicle = ({ params }) => {
             {vehicleList[carName].name}'s Refills
           </h4>
           <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
-            <RecentRefills data={refillDetails} vehicleList={vehicleList} />
+            <RecentRefills
+              data={refillDetails}
+              vehicleList={vehicleList}
+              showPagination={true}
+            />
           </div>
         </div>
       ) : null}

@@ -5,10 +5,9 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { ChevronLeftIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import useSidebarControls from "@/hooks/sidebar-control";
 import NavBar from "./NavBar";
-
 
 const SideBar = ({ children }) => {
   const { open, close, show } = useSidebarControls();
@@ -45,7 +44,7 @@ const SideBar = ({ children }) => {
         <div
           className={`${
             show ? "w-72" : "w-20"
-          } p-5 pt-8 duration-300 h-screen bg-dark-purple relative z-20`}
+          } p-5 pt-8 duration-300 min-h-screen h-full bg-dark-purple relative z-20`}
         >
           <ChevronLeftIcon
             className={`absolute cursor-pointer rounded-full -right-3 top-9 w-7 border-2 border-dark-purple fill-dark-purple bg-white ${
@@ -54,10 +53,6 @@ const SideBar = ({ children }) => {
             onClick={show ? close : open}
           />
           <div className="flex gap-x-4 items-center">
-            {/* <img
-              src="/next.svg"
-              className={`cursor-pointer duration-500 w-16 h-16 `}
-            /> */}
             <h1
               className={`text-gray-200 origin-left font-medium text-xl duration-300 text-center ${
                 !show && "scale-0"
@@ -85,11 +80,12 @@ const SideBar = ({ children }) => {
                   } text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md checked:bg-violet-700`}
                   onClick={() => handleNavBarBtnClick(menu.title)}
                 >
-                  <Image 
-                  src={`/assets/${menu.title}.svg`}
-                  width={37}
-                  height={37}
-                  className="fill-white"
+                  <Image
+                    src={`/assets/${menu.title}.svg`}
+                    width={37}
+                    height={37}
+                    className="fill-white"
+                    alt="Menu Title Logo"
                   />
                   <span
                     className={`${!show && "hidden"} origin-left duration-200`}

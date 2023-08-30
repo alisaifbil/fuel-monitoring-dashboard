@@ -1,5 +1,5 @@
-"use client"
-import React from 'react';
+"use client";
+import React from "react";
 import {
   Chart as ChartJS,
   LinearScale,
@@ -11,8 +11,9 @@ import {
   Tooltip,
   LineController,
   BarController,
-} from 'chart.js';
-import { Chart } from 'react-chartjs-2';
+  Filler,
+} from "chart.js";
+import { Chart } from "react-chartjs-2";
 
 ChartJS.register(
   LinearScale,
@@ -23,11 +24,12 @@ ChartJS.register(
   Legend,
   Tooltip,
   LineController,
-  BarController
+  BarController,
+  Filler
 );
 
-const DetailsOverChart = ({options , data}) => {
+const DetailsOverChart = ({ options, data }) => {
   return <Chart options={options} data={data} />;
-}
+};
 
 export default DetailsOverChart;

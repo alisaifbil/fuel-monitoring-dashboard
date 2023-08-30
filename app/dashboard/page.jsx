@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import VehicleSummary from "@/components/VehicleSummary";
 import RecentRefills from "@/components/RecentRefills";
-import DetailsOverChart from "@/components/DetailsOverChart";
 import { useSession } from "next-auth/react";
 import SummaryFilters from "@/components/SummaryFilters";
 
@@ -45,11 +43,13 @@ const Dashboard = () => {
       // check for entryMOY and entryMOYPrev values for December and Jan values, should work fine for these months as well
       const entryMOY =
         filter === "monthly"
-          ? new Date(entry.date).getMonth() === currentDate.getMonth() && new Date(entry.date).getFullYear() === currentDate.getFullYear()
+          ? new Date(entry.date).getMonth() === currentDate.getMonth() &&
+            new Date(entry.date).getFullYear() === currentDate.getFullYear()
           : new Date(entry.date).getFullYear() === currentDate.getFullYear();
       const entryMOYPrev =
         filter === "monthly"
-          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1 && new Date(entry.date).getFullYear() === currentDate.getFullYear()
+          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1 &&
+            new Date(entry.date).getFullYear() === currentDate.getFullYear()
           : new Date(entry.date).getFullYear() ===
             currentDate.getFullYear() - 1;
 
@@ -92,7 +92,6 @@ const Dashboard = () => {
   };
 
   const setFilteredData = (filterCaught) => {
-    console.log(filterCaught);
     setFilter(filterCaught);
     filteredData(refillDetails, filterCaught);
   };
@@ -118,14 +117,12 @@ const Dashboard = () => {
                 data={refillDetails}
                 vehicleList={vehicleList}
                 noOfRecords={5}
+                showPagination={false}
               />
             </div>
           </div>
         ) : null}
       </div>
-      {/* <div className="hidden md:block md:grow md:w-full">
-        <DetailsOverChart />
-      </div> */}
     </>
   );
 };
