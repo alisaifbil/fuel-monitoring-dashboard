@@ -49,6 +49,7 @@ const SummaryFilters = ({
               (rec) => rec.vehicleName === entry.vehicleName
             )}
             vehicleList={vehicleList}
+            activeFilter={activeFilter}
           />
         ))}
       </div>

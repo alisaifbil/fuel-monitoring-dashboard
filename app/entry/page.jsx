@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Dashboard from "../dashboard/page";
 import Modal from "@/components/Modal";
+import FormLabel from "@/libraries/ui-design-system/src/design-system/form-label/page";
+import FormInput from "@/libraries/ui-design-system/src/design-system/input/page";
 
 const DashboardComponent = () => {
   const router = useRouter();
@@ -17,12 +19,13 @@ const DashboardComponent = () => {
 };
 
 const RefuelingDetails = () => {
-  const [vehicleName, setVehicleName] = useState("");
+  const [vehicleName, setVehicleName] = useState("PE");
   const [price, setPrice] = useState(0);
   const [volume, setVolume] = useState(0.0);
   const [currentMileage, setCurrentMileage] = useState(0);
   const [fillingDate, setDate] = useState("");
   const [petrolStation, setPetrolStation] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [modalDetails, setModalDetails] = useState({
     responseCode: "",
     modalMessage: "",
@@ -32,47 +35,60 @@ const RefuelingDetails = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    const dateToday = new Date();
     const currentDate =
-      new Date().getFullYear() +
+      dateToday.getFullYear() +
       "-" +
-      (new Date().getMonth() + 1 > 10
-        ? new Date().getMonth() + 1
-        : "0" + (new Date().getMonth() + 1)) +
+      (dateToday.getMonth() + 1 >= 10
+        ? dateToday.getMonth() + 1
+        : "0" + (dateToday.getMonth() + 1)) +
       "-" +
-      new Date().getDate();
+      (dateToday.getDate() >= 10
+        ? dateToday.getDate()
+        : "0" + dateToday.getDate());
 
     setDate(currentDate);
   }, []);
 
   const createEntry = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("/api/vehiclerefilldetails/new", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: session?.user.id,
-          vehicleName: vehicleName,
-          price: price,
-          volume: volume,
-          currentMileage: currentMileage,
-          date: fillingDate,
-          petrolStation: petrolStation,
-        }),
-      });
-      setModalDetails({
-        responseCode: response.status,
-        modalMessage:
-          response.status === 201
-            ? "The record has been inserted successfully!"
-            : response.status === 500
-            ? "There was some error while inserting the record!"
-            : "There was some network error!",
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      toggleShow(true);
+    setFormSubmitted(true);
+    if (
+      vehicleName !== "" &&
+      price > 0 &&
+      volume > 0 &&
+      currentMileage > 0 &&
+      fillingDate !== ""
+    ) {
+      try {
+        const response = await fetch("/api/vehiclerefilldetails/new", {
+          method: "POST",
+          body: JSON.stringify({
+            userId: session?.user.id,
+            vehicleName: vehicleName,
+            price: price,
+            volume: volume,
+            currentMileage: currentMileage,
+            date: fillingDate,
+            petrolStation: petrolStation,
+          }),
+        });
+        setModalDetails({
+          responseCode: response.status,
+          modalMessage:
+            response.status === 201
+              ? "The record has been inserted successfully!"
+              : response.status === 500
+              ? "There was some error while inserting the record!"
+              : "There was some network error!",
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        toggleShow(true);
+      }
+    } else {
+      alert("Fill all required values");
     }
   };
 
@@ -86,12 +102,10 @@ const RefuelingDetails = () => {
             </div>
             <div className="grid gap-6 mb-6 md:grid-cols-2 ">
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Vehicle Name
-                </label>
+                <FormLabel label="Vehicle Name" />
                 <select
                   id="countries"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   onChange={(event) => setVehicleName(event.target.value)}
                   defaultValue="PE"
                   required
@@ -103,72 +117,56 @@ const RefuelingDetails = () => {
                 </select>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Price
-                </label>
-                <input
+                <FormLabel label="Price" />
+                <FormInput
                   type="number"
                   id="price"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
+                  required={formSubmitted}
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Volume (in Litres)
-                </label>
-                <input
+                <FormLabel label="Volume (in Litres)" />
+                <FormInput
                   type="number"
                   step="0.01"
                   id="volume"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
                   value={volume}
                   onChange={(event) => setVolume(event.target.value)}
+                  required={formSubmitted}
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Current Mileage (in KMs)
-                </label>
-                <input
+                <FormLabel label="Current Mileage (in KMs)" />
+                <FormInput
                   type="number"
                   id="currentMileage"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
                   value={currentMileage}
                   onChange={(event) => setCurrentMileage(event.target.value)}
+                  required={formSubmitted}
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Date
-                </label>
-                <input
+                <FormLabel label="Date" />
+                <FormInput
                   type="date"
                   id="date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
                   value={fillingDate}
                   onChange={(event) => setDate(event.target.value)}
+                  required={formSubmitted}
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Petrol Station
-                </label>
-                <input
+                <FormLabel label="Petrol Station" />
+                <FormInput
                   type="text"
                   id="petrolStation"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={petrolStation}
                   onChange={(event) => setPetrolStation(event.target.value)}
                 />
               </div>
             </div>
-
             <button
               type="submit"
               className="float-right text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"

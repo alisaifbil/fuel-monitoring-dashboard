@@ -31,16 +31,13 @@ const Dashboard = () => {
       filteredData(data, filter);
     };
 
-    // if (session?.user.id) {
     fetchRefillDetails();
-    // }
   }, []);
 
   const filteredData = (data, filter) => {
     const summaryArray = { current: [], previous: [] };
     const currentDate = new Date();
     data.map((entry) => {
-      // check for entryMOY and entryMOYPrev values for December and Jan values, should work fine for these months as well
       const entryMOY =
         filter === "monthly"
           ? new Date(entry.date).getMonth() === currentDate.getMonth() &&
@@ -48,8 +45,14 @@ const Dashboard = () => {
           : new Date(entry.date).getFullYear() === currentDate.getFullYear();
       const entryMOYPrev =
         filter === "monthly"
-          ? new Date(entry.date).getMonth() === currentDate.getMonth() - 1 &&
-            new Date(entry.date).getFullYear() === currentDate.getFullYear()
+          ? currentDate.getMonth() === 0
+            ? new Date(entry.date).getMonth() ===
+                (11 + currentDate.getMonth()) % 12 &&
+              new Date(entry.date).getFullYear() ===
+                currentDate.getFullYear() - 1
+            : new Date(entry.date).getMonth() ===
+                (11 + currentDate.getMonth()) % 12 &&
+              new Date(entry.date).getFullYear() === currentDate.getFullYear()
           : new Date(entry.date).getFullYear() ===
             currentDate.getFullYear() - 1;
 

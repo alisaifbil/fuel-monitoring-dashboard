@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
+import RoundedValue from "@/libraries/ui-design-system/src/design-system/rounded-value/page";
 
 const VehicleSummary = ({
   carName,
@@ -7,6 +8,7 @@ const VehicleSummary = ({
   totalLitres,
   previousMOYDetails,
   vehicleList,
+  activeFilter
 }) => {
   const router = useRouter();
 
@@ -29,14 +31,8 @@ const VehicleSummary = ({
       <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
         {vehcileNames[carName].name}
       </h3>
-      <p className="font-normal text-sm text-gray-700">
-        {" "}
-        Rs. {Math.round((totalPrice + Number.EPSILON) * 100) / 100}
-      </p>
-      <p className="font-normal text-sm text-gray-700">
-        {" "}
-        {Math.round((totalLitres + Number.EPSILON) * 100) / 100} Litres
-      </p>
+      <RoundedValue value={totalPrice} decimals={2} units={'Rs.'} />
+      <RoundedValue value={totalLitres} decimals={2} units={'Litres'} />
       {!isNaN(momPct) && momPct !== Infinity ? (
         <div className="w-[100%] bg-gray-200 rounded-full mb-4 mt-4">
           {/* String interpolation can be used with tailwind but there are certain limitations so it is better 
@@ -51,7 +47,7 @@ const VehicleSummary = ({
             }`}
             style={{ width: `${momPct > 100 ? "100" : momPct}%` }}
           >
-            {momPct}% of last month
+            {momPct}% of last {activeFilter.replace('ly','')}
           </div>
         </div>
       ) : null}
