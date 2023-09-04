@@ -2,15 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import RecentRefills from "@/components/RecentRefills";
-import { useSession } from "next-auth/react";
 import SummaryFilters from "@/components/SummaryFilters";
 
 const Dashboard = () => {
   const [refillDetails, setRefillDetails] = useState([]);
   const [filter, setFilter] = useState("monthly");
   const [summaryData, setSummaryData] = useState({ current: [], previous: [] });
-
-  const { data: session } = useSession();
 
   const vehicleList = {
     YY: { name: "YBR-G" },
