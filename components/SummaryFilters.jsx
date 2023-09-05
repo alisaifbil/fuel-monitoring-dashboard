@@ -17,19 +17,19 @@ const SummaryFilters = ({
               <label
                 className="cursor-pointer"
                 key={index}
-                onClick={() => updateFilter(filter)}
+                onClick={() => updateFilter(filter.name)}
               >
                 <input type="radio" className="peer sr-only" name="pricing" />
                 <div
                   className={`w-[9.4rem] md:w-[20.375rem] max-w-xl rounded-md bg-white p-2 ring-2 ring-transparent transition-all hover:shadow ${
-                    activeFilter === filter
+                    activeFilter === filter.name
                       ? "text-black ring-offset-2"
                       : "text-gray-300"
                   }`}
                 >
                   <div className="items-center justify-between">
                     <p className="text-center text-sm font-semibold uppercase ">
-                      {filter}
+                      {filter.name}
                     </p>
                   </div>
                 </div>

@@ -7,15 +7,9 @@ import SummaryFilters from "@/components/SummaryFilters";
 const Dashboard = () => {
   const [refillDetails, setRefillDetails] = useState([]);
   const [filter, setFilter] = useState("monthly");
+  const [filters, setFilters] = useState([]);
+  const [vehicleList, setVehicleList] = useState([]);
   const [summaryData, setSummaryData] = useState({ current: [], previous: [] });
-
-  const vehicleList = {
-    YY: { name: "YBR-G" },
-    PE: { name: "Peugueot" },
-    WR: { name: "Wagon R" },
-    HC: { name: "Honda 150" },
-  };
-  const filters = ["monthly", "yearly"];
 
   useEffect(() => {
     const fetchRefillDetails = async () => {
@@ -28,7 +22,20 @@ const Dashboard = () => {
       filteredData(data, filter);
     };
 
+    const setVehicleListAndFilters = async () => {
+      const response = await fetch(`/api/admindetails/lovdetails`, {
+        next: { revalidate: 3600 },
+      });
+      const data = await response.json();
+      
+      const dbFilters = data.find((value) => value.name === "filters");
+      const dbVehicleList = data.find((value) => value.name === "vehicleList");
+      setFilters(dbFilters);
+      setVehicleList(dbVehicleList);
+    };
+
     fetchRefillDetails();
+    setVehicleListAndFilters();
   }, []);
 
   const filteredData = (data, filter) => {
@@ -99,23 +106,25 @@ const Dashboard = () => {
   return (
     <>
       <div className="w-full flex flex-col pt-4 md:flex-row pl-[2.5%]">
-        <div className="flex flex-col md:w-[80%]">
-          <h4 className="text-md p-4">Refueling Summary</h4>
-          <SummaryFilters
-            filters={filters}
-            updateFilter={(value) => setFilteredData(value)}
-            data={summaryData}
-            vehicleList={vehicleList}
-            activeFilter={filter}
-          />
-        </div>
-        {refillDetails.length > 0 ? (
+        {filters.values.length > 0 ? (
+          <div className="flex flex-col md:w-[80%]">
+            <h4 className="text-md p-4">Refueling Summary</h4>
+            <SummaryFilters
+              filters={filters.values}
+              updateFilter={(value) => setFilteredData(value)}
+              data={summaryData}
+              vehicleList={vehicleList.values}
+              activeFilter={filter}
+            />
+          </div>
+        ) : null}
+        {refillDetails.length > 0 && vehicleList.values.length > 0? (
           <div className="flex flex-col md:w-[50%] w-[95%]">
             <h4 className="text-md p-4">Last Five Refills</h4>
             <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
               <RecentRefills
                 data={refillDetails}
-                vehicleList={vehicleList}
+                vehicleList={vehicleList.values}
                 noOfRecords={5}
                 showPagination={false}
               />

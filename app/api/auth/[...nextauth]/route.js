@@ -17,7 +17,7 @@ const handler = NextAuth({
       });
 
       session.user.id = sessionUser._id.toString();
-
+      session.user.roles = sessionUser.roles;
       return session;
     },
     async signIn({ profile }) {

@@ -13,10 +13,15 @@ const SideBar = ({ children }) => {
   const { open, close, show } = useSidebarControls();
   const [active, setActive] = useState("");
   const [providers, setProviders] = useState(null);
+  const [Menus, setMenus] = useState([]);
   const { data: session, status } = useSession();
   const pathName = usePathname();
 
-  const Menus = [{ title: "Dashboard" }, { title: "Entry" }];
+  const Pages = [
+    { title: "Dashboard", role: "all_users" },
+    { title: "Entry", role: "makers" },
+    { title: "Settings", role: "admins" },
+  ];
 
   useEffect(() => {
     const setUpProviders = async () => {
@@ -34,8 +39,26 @@ const SideBar = ({ children }) => {
     setActive(currentPathName);
   }, [pathName]);
 
+  useEffect(() => {
+    setUpMenu();
+  }, [session]);
+
   const handleNavBarBtnClick = (title) => {
     setActive(title);
+  };
+
+  const setUpMenu = async () => {
+    const menuArray =
+      status === "authenticated"
+        ? session
+          ? Pages.filter(
+              (page) =>
+                session?.user.roles.findIndex((user) => user === page.role) !==
+                -1
+            )
+          : []
+        : Pages.filter((page) => page.role === "all_users");
+    setMenus(menuArray);
   };
 
   return (
@@ -63,16 +86,7 @@ const SideBar = ({ children }) => {
           </div>
           <ul className="pt-6">
             {Menus?.map((menu, index) => (
-              <Link
-                key={index}
-                href={`/${menu.title.toLowerCase()}`}
-                className={`${
-                  (status === "authenticated" && menu.title === "Entry") ||
-                  menu.title !== "Entry"
-                    ? "block"
-                    : "hidden"
-                }`}
-              >
+              <Link key={index} href={`/${menu.title.toLowerCase()}`}>
                 <li
                   key={index}
                   className={`${

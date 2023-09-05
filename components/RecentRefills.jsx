@@ -57,7 +57,11 @@ const RecentRefills = ({ data, vehicleList, noOfRecords, showPagination }) => {
                       {record.date.split("T")[0]}
                     </th>
                     <td className="px-[2.5%] py-[1.875%]">
-                      {vehcileNames[record.vehicleName].name}
+                      {
+                        vehcileNames.find(
+                          (vehicle) => vehicle.id === record.vehicleName
+                        ).name
+                      }
                     </td>
                     <td className="px-[2.5%] py-[1.875%]">
                       Rs. {record.price}

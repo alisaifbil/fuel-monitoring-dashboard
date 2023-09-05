@@ -19,6 +19,7 @@ const DashboardComponent = () => {
 };
 
 const RefuelingDetails = () => {
+  const [vehicleList, setVehicleList] = useState([]);
   const [vehicleName, setVehicleName] = useState("PE");
   const [price, setPrice] = useState(0);
   const [volume, setVolume] = useState(0.0);
@@ -48,6 +49,19 @@ const RefuelingDetails = () => {
         : "0" + dateToday.getDate());
 
     setDate(currentDate);
+
+    const populateVehicleList = async () => {
+      const response = await fetch(`/api/admindetails/lovdetails`, {
+        next: { revalidate: 3600 },
+      });
+      const data = await response.json();
+
+      const dbVehicleList = data.find((value) => value.name === "vehicleList");
+
+      setVehicleList(dbVehicleList);
+    };
+
+    populateVehicleList();
   }, []);
 
   const createEntry = async (e) => {
@@ -103,18 +117,21 @@ const RefuelingDetails = () => {
             <div className="grid gap-6 mb-6 md:grid-cols-2 ">
               <div>
                 <FormLabel label="Vehicle Name" />
-                <select
-                  id="countries"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  onChange={(event) => setVehicleName(event.target.value)}
-                  defaultValue="PE"
-                  required
-                >
-                  <option value="PE">Peugueot</option>
-                  <option value="WR">Wagon R</option>
-                  <option value="HC">Honda 150</option>
-                  <option value="YY">YBR-G</option>
-                </select>
+                {vehicleList?.values.length > 0 ? (
+                  <select
+                    id="vehicles"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    onChange={(event) => setVehicleName(event.target.value)}
+                    defaultValue="PE"
+                    required
+                  >
+                    {vehicleList?.values.map((value, index) => (
+                      <option key={index} value={value.id}>
+                        {value.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
               </div>
               <div>
                 <FormLabel label="Price" />

@@ -8,7 +8,7 @@ const VehicleSummary = ({
   totalLitres,
   previousMOYDetails,
   vehicleList,
-  activeFilter
+  activeFilter,
 }) => {
   const router = useRouter();
 
@@ -29,10 +29,11 @@ const VehicleSummary = ({
       onClick={handleVehicleDetailsClick}
     >
       <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 truncate">
-        {vehcileNames[carName].name}
+        {vehcileNames.find((vehicle) => vehicle.id === carName).name}
+        {/* {vehcileNames[carName].name} */}
       </h3>
-      <RoundedValue value={totalPrice} decimals={2} units={'Rs.'} />
-      <RoundedValue value={totalLitres} decimals={2} units={'Litres'} />
+      <RoundedValue value={totalPrice} decimals={2} units={"Rs."} />
+      <RoundedValue value={totalLitres} decimals={2} units={"Litres"} />
       {!isNaN(momPct) && momPct !== Infinity ? (
         <div className="w-[100%] bg-gray-200 rounded-full mb-4 mt-4">
           {/* String interpolation can be used with tailwind but there are certain limitations so it is better 
@@ -47,7 +48,7 @@ const VehicleSummary = ({
             }`}
             style={{ width: `${momPct > 100 ? "100" : momPct}%` }}
           >
-            {momPct}% of last {activeFilter.replace('ly','')}
+            {momPct}% of last {activeFilter.replace("ly", "")}
           </div>
         </div>
       ) : null}

@@ -7,12 +7,6 @@ import DetailsOverChart from "@/components/DetailsOverChart";
 const SummaryForVehicle = ({ params }) => {
   const searchParams = useSearchParams();
   const carName = searchParams.get("name");
-  const vehicleList = {
-    YY: { name: "YBR-G" },
-    PE: { name: "Peugueot" },
-    WR: { name: "Wagon R" },
-    HC: { name: "Honda 150" },
-  };
 
   const [refillDetails, setRefillDetails] = useState([]);
   const [distanceTraveled, setDistance] = useState(0);
@@ -26,17 +20,33 @@ const SummaryForVehicle = ({ params }) => {
   const [graphData, setGraphData] = useState({});
   const [graphOptions, setGraphOptions] = useState({});
   const [showGraph, setShowGraph] = useState(false);
+  const [vehicleList, setVehicleList] = useState([]);
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
       const response = await fetch(`/api/vehiclerefilldetails/${carName}`);
       const data = await response.json();
+
       setRefillDetails(data);
       setOverallDetails(data);
       setBarChartValues(data);
     };
 
-    if (carName) fetchVehicleDetails();
+    const populateVehicleList = async () => {
+      const response = await fetch(`/api/admindetails/lovdetails`, {
+        next: { revalidate: 3600 },
+      });
+      const data = await response.json();
+
+      const dbVehicleList = data.find((value) => value.name === "vehicleList");
+
+      setVehicleList(dbVehicleList);
+    };
+
+    if (carName) {
+      fetchVehicleDetails();
+      populateVehicleList();
+    }
   }, []);
 
   const setOverallDetails = (data) => {
@@ -163,9 +173,12 @@ const SummaryForVehicle = ({ params }) => {
 
   return (
     <div className="flex flex-col pl-2">
-      <div className="w-full text-center">
-        {vehicleList[carName].name}'s stats
-      </div>
+      {vehicleList?.values.length > 0 ? (
+        <div className="w-full text-center">
+          {vehicleList.values.find((vehicle) => vehicle.id === carName).name}'s
+          stats
+        </div>
+      ) : null}
       <div className="flex flex-col gap-y-2 md:flex-row md:justify-evenly">
         <div className="block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow md:w-[40%] hover:bg-gray-100">
           <div className="flex flex-row gap-x-4 items-center">
@@ -268,15 +281,16 @@ const SummaryForVehicle = ({ params }) => {
           </div>
         ) : null}
       </div>
-      {refillDetails.length > 0 ? (
+      {refillDetails.length > 0 && vehicleList.values.length > 0 ? (
         <div className="flex flex-col w-[95%] md:w-full md:justify-evenly">
           <h4 className="text-md p-4 text-center">
-            {vehicleList[carName].name}'s Refills
+            {vehicleList.values.find((vehicle) => vehicle.id === carName).name}
+            's Refills
           </h4>
           <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
             <RecentRefills
               data={refillDetails}
-              vehicleList={vehicleList}
+              vehicleList={vehicleList?.values}
               showPagination={true}
             />
           </div>
