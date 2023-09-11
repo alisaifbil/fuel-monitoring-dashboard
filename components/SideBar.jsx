@@ -14,14 +14,15 @@ const SideBar = ({ children }) => {
   const [active, setActive] = useState("");
   const [providers, setProviders] = useState(null);
   const [Menus, setMenus] = useState([]);
+  const [Pages, setPages] = useState([]);
   const { data: session, status } = useSession();
   const pathName = usePathname();
 
-  const Pages = [
-    { title: "Dashboard", role: "all_users" },
-    { title: "Entry", role: "makers" },
-    { title: "Settings", role: "admins" },
-  ];
+  // const Pages = [
+  //   { title: "Dashboard", role: "all_users" },
+  //   { title: "Entry", role: "makers" },
+  //   { title: "Settings", role: "admins" },
+  // ];
 
   useEffect(() => {
     const setUpProviders = async () => {
@@ -29,7 +30,18 @@ const SideBar = ({ children }) => {
       setProviders(response);
     };
 
+    const getAllPages = async () => {
+      const response = await fetch(`/api/admindetails/lovdetails/sideBarMenu`, {
+        next: { revalidate: 3600 },
+      });
+      const data = await response.json();
+      console.log(data[0].values);
+      setPages(data[0].values);
+    };
+
     setUpProviders();
+    getAllPages();
+    setMenus();
   }, []);
 
   useEffect(() => {
@@ -41,7 +53,7 @@ const SideBar = ({ children }) => {
 
   useEffect(() => {
     setUpMenu();
-  }, [session]);
+  }, [session, Pages]);
 
   const handleNavBarBtnClick = (title) => {
     setActive(title);
@@ -49,14 +61,11 @@ const SideBar = ({ children }) => {
 
   const setUpMenu = async () => {
     const menuArray =
-      status === "authenticated"
-        ? session
-          ? Pages.filter(
-              (page) =>
-                session?.user.roles.findIndex((user) => user === page.role) !==
-                -1
-            )
-          : []
+      session && status === "authenticated"
+        ? Pages.filter(
+            (page) =>
+              session?.user.roles.findIndex((user) => user === page.role) !== -1
+          )
         : Pages.filter((page) => page.role === "all_users");
     setMenus(menuArray);
   };

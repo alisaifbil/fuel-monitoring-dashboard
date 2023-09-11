@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import FormInput from "@/libraries/ui-design-system/src/design-system/input/page";
 import FormLabel from "@/libraries/ui-design-system/src/design-system/form-label/page";
+import pageAuthorization from "@/hooks/page-authorization";
 
 const AdminPage = () => {
   const [lovName, setLovName] = useState("");
@@ -10,22 +12,28 @@ const AdminPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   const [usersList, setUsersList] = useState([]);
+  const router = useRouter();
+  const pathName = usePathname();
+  const isAuhtorized = pageAuthorization(pathName);
 
   useEffect(() => {
-    const getUserList = async () => {
-      try {
-        const response = await fetch(`/api/admindetails/userdetails`, {
-          next: { revalidate: 3600 },
-        });
+    if (!isAuhtorized) router.push("/dashboard");
+    else {
+      const getUserList = async () => {
+        try {
+          const response = await fetch(`/api/admindetails/userdetails`, {
+            next: { revalidate: 3600 },
+          });
 
-        const data = await response.json();
-        setUsersList(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+          const data = await response.json();
+          setUsersList(data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-    getUserList();
+      getUserList();
+    }
   }, []);
 
   const setLOVValue = async (event) => {

@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Dashboard from "../dashboard/page";
 import Modal from "@/components/Modal";
 import FormLabel from "@/libraries/ui-design-system/src/design-system/form-label/page";
 import FormInput from "@/libraries/ui-design-system/src/design-system/input/page";
+import pageAuthorization from "@/hooks/page-authorization";
 
 const DashboardComponent = () => {
   const router = useRouter();
@@ -32,10 +33,15 @@ const RefuelingDetails = () => {
     modalMessage: "",
   });
   const [show, toggleShow] = useState(false);
-
+  const router = useRouter();
+  const pathName = usePathname();
   const { data: session, status } = useSession();
 
+  const isAuhtorized = pageAuthorization(pathName);
+
   useEffect(() => {
+    if (!isAuhtorized) router.push("/dashboard");
+
     const dateToday = new Date();
     const currentDate =
       dateToday.getFullYear() +
