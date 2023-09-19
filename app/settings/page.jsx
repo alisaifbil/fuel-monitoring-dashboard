@@ -1,20 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import FormInput from "@/libraries/ui-design-system/src/design-system/input/page";
 import FormLabel from "@/libraries/ui-design-system/src/design-system/form-label/page";
-import pageAuthorization from "@/hooks/page-authorization";
-
-const DashboardComponent = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push("/dashboard");
-  }, []);
-
-  return <Dashboard />;
-};
 
 const AdminPage = () => {
   const [lovName, setLovName] = useState("");
@@ -22,12 +10,6 @@ const AdminPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   const [usersList, setUsersList] = useState([]);
-  // const [isAuhtorized, setIsAuhtorized] = useState(false);
-  const router = useRouter();
-  const pathName = usePathname();
-  const isAuhtorized = pageAuthorization(pathName);
-
-  if (!isAuhtorized) router.push("/dashboard");
 
   useEffect(() => {
     // const authorize = authorizePageUsaage();
@@ -101,11 +83,6 @@ const AdminPage = () => {
       }
     }
   };
-
-  // const authorizePageUsage = async () => {
-  //   const authorise = pageAuthorization(pathName);
-  //   return authorise;
-  // };
 
   return (
     <>
