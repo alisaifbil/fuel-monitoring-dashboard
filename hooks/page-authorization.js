@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 
-export const pageAuthorization = (page) => {
+export const pageAuthorization = async (page) => {
   const { data: session } = useSession();
 
   const confirmAuthorization = async () => {
@@ -29,7 +29,7 @@ export const pageAuthorization = (page) => {
 
     return false;
   };
-  const isAuthorized = confirmAuthorization();
+  const isAuthorized = await confirmAuthorization();
   return isAuthorized;
 };
 

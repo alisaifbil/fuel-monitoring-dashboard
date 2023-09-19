@@ -35,7 +35,7 @@ const SideBar = ({ children }) => {
         next: { revalidate: 3600 },
       });
       const data = await response.json();
-      console.log(data[0].values);
+      // console.log(data[0].values);
       setPages(data[0].values);
     };
 
