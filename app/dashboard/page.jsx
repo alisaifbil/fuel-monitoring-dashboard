@@ -15,6 +15,7 @@ const Dashboard = () => {
     const fetchRefillDetails = async () => {
       const response = await fetch(`/api/vehiclerefilldetails`, {
         next: { revalidate: 3600 },
+        cache: "no-store",
       });
       const data = await response.json();
 
@@ -27,7 +28,7 @@ const Dashboard = () => {
         next: { revalidate: 3600 },
       });
       const data = await response.json();
-      
+
       const dbFilters = data.find((value) => value.name === "filters");
       const dbVehicleList = data.find((value) => value.name === "vehicleList");
       setFilters(dbFilters);
@@ -118,7 +119,7 @@ const Dashboard = () => {
             />
           </div>
         ) : null}
-        {refillDetails.length > 0 && vehicleList.values.length > 0? (
+        {refillDetails.length > 0 && vehicleList.values.length > 0 ? (
           <div className="flex flex-col md:w-[50%] w-[95%]">
             <h4 className="text-md p-4">Last Five Refills</h4>
             <div className=" pt-2 pb-4 md:pt-0 md:pr-1">
