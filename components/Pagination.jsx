@@ -35,7 +35,9 @@ const Pagination = ({ noOfPages, updatePage, currentPage, showPagination }) => {
           {arrayToShow?.map((value, index) => (
             <li
               key={index}
-              onClick={() => (value === "..." ? null : updatePage(index))}
+              onClick={() =>
+                value === "..." ? null : updatePage(Number(value) - 1)
+              }
               className={`${
                 value !== "..." ? "cursor-pointer" : "cursor-default"
               }`}
